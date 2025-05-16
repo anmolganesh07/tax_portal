@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load dict_key %}
+{% block content %}
+
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6 text-center">CA Dashboard</h1>
+
+    {% if clients %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for client in clients %}
+                <div class="bg-white shadow-md rounded-xl p-4">
+                    <h2 class="text-lg font-semibold">{{ client.get_full_name|default:client.username }}</h2>
+                    <p class="text-sm text-gray-600 mb-2">Username: {{ client.username }}</p>
+                    <a href="{% url 'ca_client_detail' client.pk %}" class="text-blue-600 hover:underline">View Details</a>
+                    <div class="mt-4">
+                        <h3 class="font-bold mb-2">Return Calendar</h3>
+                        <ul class="list-disc ml-4">
+                            {% for item in calendar_data|dict_key:client.username %}
+                                <li class="mb-1">
+                                    <span class="font-semibold 
+                                        {% if item.color == 'green' %}text-green-600
+                                        {% elif item.color == 'yellow' %}text-yellow-500
+                                        {% else %}text-red-600{% endif %}">
+                                        {{ item.label }} — Due on {{ item.due_date|date:'d M, Y' }}
+                                        {% if item.status == 'filed' %}
+                                            (Filed)
+                                        {% elif item.status == 'overdue' %}
+                                            (Overdue)
+                                        {% else %}
+                                            (Pending)
+                                        {% endif %}
+                                    </span>
+                                    {% if not item.filed %}
+                                        <form method="post" action="{{ item.file_url }}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="client_id" value="{{ client.id }}">
+                                            <input type="hidden" name="return_type" value="{{ item.label }}">
+                                            <input type="hidden" name="due_date" value="{{ item.due_date|date:'Y-m-d' }}">
+                                            <button type="submit" class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs">File</button>
+                                        </form>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600">No clients assigned to you.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -14,28 +14,31 @@
     <!-- Calendar -->
     <div class="mt-8 bg-white shadow-md rounded p-6">
         <h2 class="text-xl font-semibold mb-4">Return Calendar (May – July 2025)</h2>
-
-        {% regroup returns by due_date.month as month_groups %}
-
-        {% for month_group in month_groups %}
-            <div class="mb-6">
-                <h3 class="text-lg font-bold">{{ month_group.grouper|get_month_name }}</h3>
-                <ul class="list-disc ml-6 text-gray-700">
-                    {% for return_item in month_group.list %}
-                        <li>
-                            <span class="{% if return_item.filed_by_ca %}text-green-600 font-semibold{% else %}text-red-600 font-semibold{% endif %}">
-                                {{ return_item.get_return_type_display }} — Due on {{ return_item.due_date|date:"d M, Y" }} 
-                                {% if return_item.filed_by_ca %}
-                                    (Filed on {{ return_item.filed_date|date:"d M, Y" }})
-                                {% else %}
-                                    (Pending)
-                                {% endif %}
-                            </span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endfor %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for month in months %}
+                <div class="border rounded p-4">
+                    <h3 class="text-lg font-bold mb-2">{{ month }}</h3>
+                    <ul class="list-disc ml-4">
+                        {% for item in calendar_returns %}
+                            {% if item.due_date|date:'F' == month %}
+                                <li class="mb-2">
+                                    <span class="font-semibold {% if item.color == 'green' %}text-green-600{% elif item.color == 'yellow' %}text-yellow-500{% else %}text-red-600{% endif %}">
+                                        {{ item.label }} — Due on {{ item.due_date|date:'d M, Y' }}
+                                        {% if item.status == 'filed' %}
+                                            (Filed)
+                                        {% elif item.status == 'overdue' %}
+                                            (Overdue)
+                                        {% else %}
+                                            (Pending)
+                                        {% endif %}
+                                    </span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 

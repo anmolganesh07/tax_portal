@@ -26,24 +26,22 @@ class Document(models.Model):
 
     def __str__(self):
         return f"{self.client.username} - {self.document_type}"
-    
-class ReturnFiling(models.Model):
+
+class FiledReturn(models.Model):
     RETURN_TYPES = [
-        ('GSTR1', 'GSTR-1'),
-        ('GSTR3B', 'GSTR-3B'),
+        ('GSTR-1', 'GSTR-1'),
+        ('GSTR-3B', 'GSTR-3B'),
         ('IT', 'Income Tax'),
     ]
-
-    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='returns')
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     return_type = models.CharField(max_length=10, choices=RETURN_TYPES)
     due_date = models.DateField()
-    filed_date = models.DateField(null=True, blank=True)
-    filed_by_ca = models.BooleanField(default=False)
+    filed_date = models.DateField(auto_now_add=True)
+    filed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='filed_by_ca')
 
-    def is_due(self):
-        from datetime import date
-        return (not self.filed_by_ca) and self.due_date >= date.today()
+    class Meta:
+        unique_together = ('client', 'return_type', 'due_date')
 
     def __str__(self):
-        return f"{self.client.username} - {self.return_type} due on {self.due_date}"
+        return f"{self.client.username} - {self.return_type} filed on {self.filed_date}"
 
