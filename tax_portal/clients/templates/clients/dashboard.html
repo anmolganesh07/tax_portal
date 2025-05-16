@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block content %}
+
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6 text-center">Client Dashboard</h1>
+
+    <!-- Top buttons -->
+    <div class="flex justify-center space-x-4 mb-8">
+        <a href="{% url 'upload_document' %}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl">Upload New Document</a>
+        <a href="{% url 'client_documents' %}" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl">View Documents</a>
+    </div>
+
+    <!-- Calendar -->
+    <div class="mt-8 bg-white shadow-md rounded p-6">
+        <h2 class="text-xl font-semibold mb-4">Return Calendar (May – July 2025)</h2>
+
+        {% regroup returns by due_date.month as month_groups %}
+
+        {% for month_group in month_groups %}
+            <div class="mb-6">
+                <h3 class="text-lg font-bold">{{ month_group.grouper|get_month_name }}</h3>
+                <ul class="list-disc ml-6 text-gray-700">
+                    {% for return_item in month_group.list %}
+                        <li>
+                            <span class="{% if return_item.filed_by_ca %}text-green-600 font-semibold{% else %}text-red-600 font-semibold{% endif %}">
+                                {{ return_item.get_return_type_display }} — Due on {{ return_item.due_date|date:"d M, Y" }} 
+                                {% if return_item.filed_by_ca %}
+                                    (Filed on {{ return_item.filed_date|date:"d M, Y" }})
+                                {% else %}
+                                    (Pending)
+                                {% endif %}
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

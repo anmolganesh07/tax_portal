@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow rounded-xl">
+    <h2 class="text-2xl font-bold mb-6 text-center">Upload Document</h2>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700">Upload</button>
+    </form>
+</div>
+
+{% endblock %}

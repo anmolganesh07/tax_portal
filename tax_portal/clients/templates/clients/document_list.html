@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-6">Your Uploaded Documents</h1>
+
+  {% if documents %}
+    <table class="min-w-full bg-white border border-gray-200 rounded">
+      <thead>
+        <tr>
+          <th class="py-2 px-4 border-b">Document Type</th>
+          <th class="py-2 px-4 border-b">Uploaded At</th>
+          <th class="py-2 px-4 border-b">View</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in documents %}
+        <tr class="hover:bg-gray-100">
+          <td class="py-2 px-4 border-b">{{ doc.get_document_type_display }}</td>
+          <td class="py-2 px-4 border-b">{{ doc.uploaded_at|date:"d M Y, H:i" }}</td>
+          <td class="py-2 px-4 border-b">
+            <a href="{{ doc.file.url }}" target="_blank" class="text-blue-600 hover:underline">View PDF</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-gray-600">No documents uploaded yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
