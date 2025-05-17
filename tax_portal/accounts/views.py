@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from .models import User
 from .forms import ClientSignUpForm, CASignUpForm, LoginForm
 from django.shortcuts import redirect
+from django.contrib.auth import login
 
 class ClientSignUpView(CreateView):
     model = User
@@ -24,7 +25,9 @@ class CASignUpView(CreateView):
 
     def form_valid(self, form):
         form.instance.role = 'ca'
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        login(self.request, self.object)  # Log in the new CA user
+        return response
 
 
 class CustomLoginView(LoginView):

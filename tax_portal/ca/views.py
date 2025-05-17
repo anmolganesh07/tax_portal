@@ -1,3 +1,6 @@
+from django.views import View
+from django.shortcuts import redirect
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
@@ -5,8 +8,11 @@ from clients.models import Document
 from accounts.models import User
 from django.utils.timezone import now
 import calendar
+from accounts.models import User
+from datetime import datetime
 from collections import defaultdict
 from clients.models import Document, FiledReturn
+
 
 class CADashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'ca/CAdashboard.html'
@@ -79,19 +85,15 @@ class CAClientDetailView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         context['documents'] = Document.objects.filter(client=client).order_by('-uploaded_at')
         return context
 
-from django.views import View
-from django.shortcuts import redirect
-from django.contrib import messages
+
 
 class FileReturnView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         return self.request.user.role == 'ca'
     def post(self, request):
-        from datetime import datetime
         client_id = request.POST.get('client_id')
         return_type = request.POST.get('return_type')
         due_date = request.POST.get('due_date')
-        from accounts.models import User
         client = User.objects.get(id=client_id)
         due_date_obj = datetime.strptime(due_date, '%Y-%m-%d').date()
         FiledReturn.objects.get_or_create(
