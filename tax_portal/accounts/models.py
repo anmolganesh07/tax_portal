@@ -11,3 +11,27 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.role})"
+
+
+class ItrUsers(AbstractUser):
+    user_id = models.CharField(max_length=150, unique=True)
+    password = models.CharField(max_length=128)
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='itrusers_set',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups'
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='itrusers_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions'
+    )
+    USERNAME_FIELD = 'user_id'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.user_id

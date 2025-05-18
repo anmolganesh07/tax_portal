@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">ITR User Sign Up</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="id_user_id" class="block text-gray-700">ITR User ID</label>
+                {{ form.user_id }}
+            </div>
+            <div class="mb-4">
+                <label for="id_password" class="block text-gray-700">Password</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl">Sign Up</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

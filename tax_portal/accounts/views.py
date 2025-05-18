@@ -1,10 +1,10 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
-from .models import User
-from .forms import ClientSignUpForm, CASignUpForm, LoginForm
+from .models import User, ItrUsers
+from .forms import ClientSignUpForm, CASignUpForm, LoginForm, ItrUserSignUpForm, ItrUserLoginForm
 from django.shortcuts import redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 
 class ClientSignUpView(CreateView):
     model = User
@@ -45,4 +45,33 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy('home')
-    
+
+
+class ItrUserSignUpView(CreateView):
+    model = ItrUsers
+    form_class = ItrUserSignUpForm
+    template_name = 'accounts/itr_signup.html'
+    success_url = reverse_lazy('login_itr')
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.set_password(form.cleaned_data['password'])
+        user.username = form.cleaned_data['user_id']
+        user.save()
+        return super().form_valid(form)
+
+
+class ItrUserLoginView(FormView):
+    template_name = 'accounts/itr_login.html'
+    form_class = ItrUserLoginForm
+    success_url = reverse_lazy('itr_home')
+
+    def form_valid(self, form):
+        user_id = form.cleaned_data['user_id']
+        password = form.cleaned_data['password']
+        user = authenticate(self.request, username=user_id, password=password)
+        if user is not None:
+            login(self.request, user)
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)

@@ -35,7 +35,10 @@
                                             (Pending)
                                         {% endif %}
                                     </span>
-                                    {% if not item.filed %}
+                                    {% if item.label == 'Income Tax' %}
+                                        <a href="{% url 'itr_home' %}" class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs">File</a>
+                                    {% endif %}
+                                    {% if not item.filed and item.label != 'Income Tax' %}
                                         <form method="post" action="{{ item.file_url }}" style="display:inline;">
                                             {% csrf_token %}
                                             <input type="hidden" name="client_id" value="{{ client.id }}">

@@ -12,6 +12,7 @@ from accounts.models import User
 from datetime import datetime
 from collections import defaultdict
 from clients.models import Document, FiledReturn
+from django.urls import reverse
 
 
 class CADashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -90,6 +91,13 @@ class CAClientDetailView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 class FileReturnView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         return self.request.user.role == 'ca'
+
+    def get(self, request):
+        return_type = request.GET.get('return_type')
+        if return_type == 'IT':
+            return redirect(reverse('itr_home'))
+        return redirect('/')
+
     def post(self, request):
         client_id = request.POST.get('client_id')
         return_type = request.POST.get('return_type')
