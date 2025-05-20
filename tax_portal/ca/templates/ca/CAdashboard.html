@@ -43,7 +43,7 @@
                         <input type="hidden" name="client_id" value="{{ client.id }}">
                         <input type="hidden" name="return_type" value="{{ item.label }}">
                         <input type="hidden" name="due_date" value="{{ item.due_date|date:'Y-m-d' }}">
-                        <button type="submit" class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs">File</button>
+                        <button type="button" class="ml-2 px-2 py-1 bg-blue-500 text-white rounded text-xs " >File</button>
                       </form>
                     {% endif %}
                     <!-- Debug: force refresh -->
