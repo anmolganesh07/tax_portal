@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex items-center justify-center min-h-[80vh] bg-gradient-to-br from-blue-50 to-white">
+  <div class="bg-white/95 shadow-2xl rounded-3xl p-10 max-w-3xl w-full border-t-8 border-gold-400">
+    <h1 class="text-2xl font-extrabold text-blue-900 mb-6 text-center">ITR-V Acknowledgment Form</h1>
+    <div class="border border-gray-300 rounded-xl p-6 bg-gray-50">
+      <div class="flex justify-between mb-4">
+        <span class="font-bold">Assessment Year: {{ assessment_year }}</span>
+        <span class="font-bold">Form: ITR-V</span>
+      </div>
+      <table class="w-full text-sm mb-6">
+        <tr><td class="font-semibold">Name</td><td></td><td class="font-semibold">PAN</td><td>{{ pan }}</td></tr>
+        <tr><td class="font-semibold">Flat/Door/Block No</td><td>{{ flat_no }}</td><td class="font-semibold">Name Of Premises/Building/Village</td><td>{{ building }}</td></tr>
+        <tr><td class="font-semibold">Road/Street/Post Office</td><td>{{ street }}</td><td class="font-semibold">Area/Locality</td><td>{{ area }}</td></tr>
+        <tr><td class="font-semibold">Town/City/District</td><td>{{ city }}</td><td class="font-semibold">State</td><td>{{ state }}</td></tr>
+        <tr><td class="font-semibold">Pin/ZipCode</td><td>{{ pincode }}</td><td class="font-semibold">Status</td><td>{{ status }}</td></tr>
+        <tr><td class="font-semibold">e-Filing Acknowledgement Number</td><td colspan="3">{{ ack_number }}</td></tr>
+      </table>
+      <h2 class="font-bold text-lg mb-2">Computation of Income and Tax</h2>
+      <table class="w-full text-sm mb-6 border">
+        <tr class="bg-blue-50"><th class="p-1">#</th><th class="p-1">Particulars</th><th class="p-1">Amount</th></tr>
+        <tr><td>1</td><td>Gross Total Income</td><td>{{ gross_total_income }}</td></tr>
+        <tr><td>2</td><td>Total Deductions under Chapter-VI-A</td><td>{{ deductions }}</td></tr>
+        <tr><td>3</td><td>Total Income</td><td>{{ total_income }}</td></tr>
+        <tr><td>3a</td><td>Deemed Total Income under AMT/MAT</td><td>{{ deemed_income }}</td></tr>
+        <tr><td>3b</td><td>Current Year loss, if any</td><td>{{ current_year_loss }}</td></tr>
+        <tr><td>4</td><td>Net Tax Payable</td><td>{{ net_tax_payable }}</td></tr>
+        <tr><td>5</td><td>Interest and Fee Payable</td><td>{{ interest_fee }}</td></tr>
+        <tr><td>6</td><td>Total Tax, Interest and Fee Payable</td><td>{{ total_tax_interest_fee }}</td></tr>
+        <tr><td>7</td><td>Taxes Paid</td><td></td></tr>
+        <tr><td>7a</td><td>Advance Tax</td><td>{{ advance_tax }}</td></tr>
+        <tr><td>7b</td><td>TDS</td><td>{{ tds }}</td></tr>
+        <tr><td>7c</td><td>TCS</td><td>{{ tcs }}</td></tr>
+        <tr><td>7d</td><td>Self Assessment Tax</td><td>{{ self_assessment_tax }}</td></tr>
+        <tr><td>7e</td><td>Total Taxes Paid (7a+7b+7c+7d)</td><td>{{ total_taxes_paid }}</td></tr>
+        <tr><td>8</td><td>Tax Payable (6-7e)</td><td>{{ tax_payable }}</td></tr>
+        <tr><td>9</td><td>Refund (7e-6)</td><td>{{ refund }}</td></tr>
+        <tr><td>10</td><td>Exempt Income</td><td>{{ exempt_income }}</td></tr>
+      </table>
+      <div class="mt-6">
+        <h2 class="font-bold text-lg mb-2">Verification</h2>
+        <p class="text-gray-700">I, <span class="font-semibold">{{ name }}</span>, verify that the information given above is true and correct to the best of my knowledge and belief.</p>
+      </div>
+    </div>
+    <div class="mt-8 text-center">
+      <a href="/ca/ca-dashboard/" class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-6 rounded-xl font-semibold shadow">Back to Dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

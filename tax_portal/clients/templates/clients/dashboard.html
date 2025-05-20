@@ -1,52 +1,52 @@
 {% extends "base.html" %}
 {% load custom_filters %}
 {% block content %}
-
-<div class="container mx-auto p-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-center">Client Dashboard</h1>
-        
-        <form method="post" action="{% url 'logout' %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl">Logout</button>
-        </form>
+<div class="container mx-auto py-10">
+  <section>
+    <div class="flex justify-between items-center mb-6 px-4">
+      <h1 class="text-3xl font-extrabold text-blue-900">Client Dashboard</h1>
+      <form method="post" action="{% url 'logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl font-semibold">Logout</button>
+      </form>
     </div>
-
-    <!-- Top buttons -->
-    <div class="flex justify-center space-x-4 mb-8">
-        <a href="{% url 'upload_document' %}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl">Upload New Document</a>
-        <a href="{% url 'client_documents' %}" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl">View Documents</a>
+    <div class="flex flex-col md:flex-row gap-4 mb-8 px-4">
+      <a href="{% url 'upload_document' %}" class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-6 rounded-xl font-semibold shadow">Upload New Document</a>
+      <a href="{% url 'client_documents' %}" class="bg-gold-400 hover:bg-gold-500 text-blue-900 py-2 px-6 rounded-xl font-semibold shadow">View Documents</a>
     </div>
-
-    <!-- Calendar -->
-    <div class="mt-8 bg-white shadow-md rounded p-6">
-        <h2 class="text-xl font-semibold mb-4">Return Calendar (May – July 2025)</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {% for month in months %}
-                <div class="border rounded p-4">
-                    <h3 class="text-lg font-bold mb-2">{{ month }}</h3>
-                    <ul class="list-disc ml-4">
-                        {% for item in calendar_returns %}
-                            {% if item.due_date|date:'F' == month %}
-                                <li class="mb-2">
-                                    <span class="font-semibold {% if item.color == 'green' %}text-green-600{% elif item.color == 'yellow' %}text-yellow-500{% else %}text-red-600{% endif %}">
-                                        {{ item.label }} — Due on {{ item.due_date|date:'d M, Y' }}
-                                        {% if item.status == 'filed' %}
-                                            (Filed)
-                                        {% elif item.status == 'overdue' %}
-                                            (Overdue)
-                                        {% else %}
-                                            (Pending)
-                                        {% endif %}
-                                    </span>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endfor %}
-        </div>
+    <div class="bg-white shadow-lg rounded-2xl p-8 border-t-4 border-gold-400">
+      <h2 class="text-2xl font-bold mb-6 text-blue-900 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 10c-4.41 0-8-1.79-8-4V6c0-2.21 3.59-4 8-4s8 1.79 8 4v8c0 2.21-3.59 4-8 4z" />
+        </svg>
+        Return Calendar (May – July 2025)
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {% for month in months %}
+          <div class="border rounded-xl p-4 bg-blue-50/50">
+            <h3 class="text-lg font-bold mb-2 text-blue-900">{{ month }}</h3>
+            <ul class="list-disc ml-4">
+              {% for item in calendar_returns %}
+                {% if item.due_date|date:'F' == month %}
+                  <li class="mb-2">
+                    <span class="font-semibold {% if item.color == 'green' %}text-green-600{% elif item.color == 'yellow' %}text-yellow-500{% else %}text-red-600{% endif %}">
+                      {{ item.label }} — Due on {{ item.due_date|date:'d M, Y' }}
+                      {% if item.status == 'filed' %}
+                        <a href="{% url 'client_acknowledgment' %}?filed_return_id={{ item.filed_return_id }}" class="underline text-green-700 font-bold">(Filed)</a>
+                      {% elif item.status == 'overdue' %}
+                        (Overdue)
+                      {% else %}
+                        (Pending)
+                      {% endif %}
+                    </span>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
     </div>
+  </section>
 </div>
-
 {% endblock %}

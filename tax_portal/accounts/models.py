@@ -8,6 +8,11 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     assigned_ca = models.ForeignKey('self', null=True, blank=True, limit_choices_to={'role': 'ca'}, on_delete=models.SET_NULL)
+    pan_number = models.CharField(max_length=20, blank=True, null=True)
+    aadhar_number = models.CharField(max_length=20, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    bank_account = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return f"{self.username} ({self.role})"

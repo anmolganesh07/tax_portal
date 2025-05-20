@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">ITR User Sign Up</h1>
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-4">
-                <label for="id_user_id" class="block text-gray-700">ITR User ID</label>
-                {{ form.user_id }}
-            </div>
-            <div class="mb-4">
-                <label for="id_password" class="block text-gray-700">Password</label>
-                {{ form.password }}
-            </div>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl">Sign Up</button>
-        </form>
-    </div>
+<div class="flex items-center justify-center min-h-[80vh] bg-gradient-to-br from-blue-50 to-white">
+  <div class="bg-white/95 shadow-2xl rounded-3xl p-10 max-w-md w-full border-t-8 border-gold-400">
+    <h1 class="text-3xl font-extrabold text-blue-900 mb-6 text-center">ITR User Sign Up</h1>
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+      <div>
+        <label for="id_user_id" class="block text-gray-700 font-semibold mb-1">ITR User ID</label>
+        {{ form.user_id }}
+      </div>
+      <div>
+        <label for="id_password" class="block text-gray-700 font-semibold mb-1">Password</label>
+        {{ form.password }}
+      </div>
+      <button type="submit" class="w-full bg-gold-400 hover:bg-gold-500 text-blue-900 py-3 rounded-xl font-semibold text-lg shadow">Sign Up</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

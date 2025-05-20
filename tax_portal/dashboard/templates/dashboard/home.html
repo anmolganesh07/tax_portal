@@ -1,20 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">Welcome to Tax Portal</h1>
-        <p class="text-gray-600 mb-6">Simplify document uploads, track tax return dates, and collaborate with your CA — all in one place.</p>
-
-        <div class="flex flex-col space-y-4">
-            <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl">Login</a>
-            
-            <div class="flex justify-between">
-                <a href="{% url 'client_signup' %}" class="text-sm text-blue-500 hover:underline">Sign up as Client</a>
-                <a href="{% url 'ca_signup' %}" class="text-sm text-blue-500 hover:underline">Sign up as CA</a>
-            </div>
-        </div>
+<div class="flex items-center justify-center min-h-[80vh] bg-gradient-to-br from-blue-50 to-white">
+  <div class="bg-white/90 shadow-2xl rounded-3xl p-10 max-w-2xl w-full text-center border-t-8 border-gold-400">
+    <img src="/static/logo_ca.png" alt="CA Logo" class="mx-auto h-16 w-16 mb-4" onerror="this.style.display='none'">
+    <h1 class="text-4xl font-extrabold text-blue-900 mb-2 tracking-tight">Welcome to CA Tax Portal</h1>
+    <p class="text-gray-600 mb-8 text-lg">India's trusted platform for Chartered Accountants and their clients to manage tax filings, documents, and deadlines with ease.</p>
+    <div class="flex flex-col md:flex-row justify-center gap-4">
+      <a href="{% url 'login' %}" class="bg-blue-700 hover:bg-blue-800 text-white py-3 px-8 rounded-xl font-semibold text-lg shadow">Login</a>
+      <a href="{% url 'client_signup' %}" class="bg-gold-400 hover:bg-gold-500 text-blue-900 py-3 px-8 rounded-xl font-semibold text-lg shadow">Sign up as Client</a>
+      <a href="{% url 'ca_signup' %}" class="bg-white border border-blue-700 text-blue-900 py-3 px-8 rounded-xl font-semibold text-lg shadow hover:bg-blue-50">Sign up as CA</a>
     </div>
+  </div>
 </div>
-
 {% endblock %}
