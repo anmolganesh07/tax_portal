@@ -103,42 +103,40 @@ class ClientAcknowledgmentView(LoginRequiredMixin, UserPassesTestMixin, Template
         return self.request.user.role == 'client'
 
     def get(self, request, *args, **kwargs):
-        # Get the filed return by id or by due date/type
         filed_return_id = self.request.GET.get('filed_return_id')
         if filed_return_id:
             filed_return = get_object_or_404(FiledReturn, id=filed_return_id, client=request.user)
         else:
-            # fallback: show latest IT return
             filed_return = FiledReturn.objects.filter(client=request.user, return_type='IT').order_by('-filed_date').first()
         user = request.user
         context = {
-            'assessment_year': '2025-26',
+            'assessment_year': '2024-25',
             'name': user.get_full_name() or user.username,
             'pan': getattr(user, 'pan_number', ''),
             'flat_no': user.address if hasattr(user, 'address') else '',
-            'building': '',
-            'street': '',
-            'area': user.bank_account if hasattr(user, 'bank_account') else '',
-            'city': '',
-            'state': '',
-            'pincode': '',
-            'status': '',
+            'building': 'Sunshine Apartments',
+            'street': 'MG Road',
+            'area': 'MG Road',
+            'city': 'Bengaluru',
+            'state': 'Karnataka',
+            'pincode': '560097',
+            'status': 'Filed',
             'ack_number': get_random_string(12).upper(),
-            'gross_total_income': '...',
-            'deductions': '...',
-            'total_income': '...',
-            'deemed_income': '...',
-            'current_year_loss': '...',
-            'net_tax_payable': '...',
-            'interest_fee': '...',
-            'total_tax_interest_fee': '...',
-            'advance_tax': '...',
-            'tds': '...',
-            'tcs': '...',
-            'self_assessment_tax': '...',
-            'total_taxes_paid': '...',
-            'tax_payable': '...',
-            'refund': '...',
-            'exempt_income': '...',
+            'gross_total_income': '12,50,000',
+            'deductions': '1,50,000',
+            'total_income': '11,00,000',
+            'deemed_income': '0',
+            'current_year_loss': '0',
+            'net_tax_payable': '1,10,000',
+            'interest_fee': '2,000',
+            'total_tax_interest_fee': '1,12,000',
+            'advance_tax': '50,000',
+            'tds': '40,000',
+            'tcs': '5,000',
+            'self_assessment_tax': '10,000',
+            'total_taxes_paid': '1,05,000',
+            'tax_payable': '7,000',
+            'refund': '0',
+            'exempt_income': '1,00,000',
         }
         return render(request, self.template_name, context)
