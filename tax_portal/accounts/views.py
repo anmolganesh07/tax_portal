@@ -23,7 +23,7 @@ class ClientSignUpView(CreateView):
     def form_valid(self, form):
         form.instance.role = 'client'
         response = super().form_valid(form)
-        login(self.request, self.object)  # Log in the new client user
+        login(self.request, self.object) 
         return response
 
 
@@ -36,7 +36,7 @@ class CASignUpView(CreateView):
     def form_valid(self, form):
         form.instance.role = 'ca'
         response = super().form_valid(form)
-        login(self.request, self.object)  # Log in the new CA user
+        login(self.request, self.object)  
         return response
 
 
@@ -110,7 +110,6 @@ class ClientPersonalInfoView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # Do NOT set instance, so the form is always empty for the client
         return kwargs
 
     def form_valid(self, form):
@@ -149,7 +148,6 @@ class ItrPersonalInfoView(LoginRequiredMixin, FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        # Always save to the current user
         user = self.request.user
         user.pan_number = form.cleaned_data['pan_number']
         user.aadhar_number = form.cleaned_data['aadhar_number']
@@ -186,13 +184,11 @@ class AcknowledgmentView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         from accounts.models import User
         from clients.models import FiledReturn
-        # Always use the client_id from session or GET, never the logged-in CA
         client_id = request.session.get('ack_client_id') or request.GET.get('client_id')
         user = None
         if client_id:
             try:
                 user = User.objects.get(id=client_id)
-                # Mark Income Tax as filed for this client if not already
                 due_date = date(2025, 7, 30)
                 FiledReturn.objects.get_or_create(
                     client=user,
