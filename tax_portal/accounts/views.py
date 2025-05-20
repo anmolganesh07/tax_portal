@@ -11,7 +11,8 @@ from django.utils import timezone
 from django.shortcuts import render
 from clients.models import FiledReturn
 from datetime import date
-import logging
+from accounts.models import User
+
 
 class ClientSignUpView(CreateView):
     model = User
@@ -90,10 +91,13 @@ class ItrUserLoginView(FormView):
         user_id = form.cleaned_data['user_id']
         password = form.cleaned_data['password']
         financial_year = form.cleaned_data['financial_year']
+        client_id = self.request.GET.get('client_id') or self.request.POST.get('client_id')
         user = authenticate(self.request, username=user_id, password=password)
         if user is not None:
             login(self.request, user)
             self.request.session['financial_year'] = financial_year
+            if client_id:
+                self.request.session['ack_client_id'] = int(client_id)
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
@@ -127,16 +131,15 @@ class ItrPersonalInfoView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # Only use instance if the user has already saved info (i.e., not a new user with all fields blank)
-        user = self.request.user
-        if any([
-            bool(user.pan_number),
-            bool(user.aadhar_number),
-            bool(user.phone_number),
-            bool(user.address),
-            bool(user.bank_account)
-        ]):
-            kwargs['instance'] = user
+        client_id = self.request.GET.get('client_id') or self.request.POST.get('client_id')
+        if client_id:
+            try:
+                client = User.objects.get(id=client_id)
+                kwargs['instance'] = client
+            except User.DoesNotExist:
+                kwargs['instance'] = self.request.user
+        else:
+            kwargs['instance'] = self.request.user
         return kwargs
 
     def dispatch(self, request, *args, **kwargs):
@@ -161,11 +164,9 @@ class SelfDeclarationView(LoginRequiredMixin, TemplateView):
     template_name = 'accounts/self_declaration.html'
 
     def post(self, request, *args, **kwargs):
-        # Mark only the IT return as filed for the client after self declaration
         client_id = request.GET.get('client_id') or request.POST.get('client_id')
         if client_id:
             client = get_object_or_404(User, id=client_id)
-            # Use the same due date as the dashboard for IT (July 30, 2025)
             due_date = date(2025, 7, 30)
             FiledReturn.objects.get_or_create(
                 client=client,
@@ -173,9 +174,7 @@ class SelfDeclarationView(LoginRequiredMixin, TemplateView):
                 due_date=due_date,
                 defaults={'filed_by': request.user}
             )
-            # Set client_id in session for acknowledgment
             request.session['ack_client_id'] = int(client_id)
-        # Do NOT clear 'ack_client_id' here!
         if 'ack_due_date' in request.session:
             del request.session['ack_due_date']
         return redirect('acknowledgment')
@@ -186,20 +185,31 @@ class AcknowledgmentView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         from accounts.models import User
-        client_id = request.session.get('ack_client_id')
-        due_date_str = request.session.get('ack_due_date')
+        from clients.models import FiledReturn
+        # Always use the client_id from session or GET, never the logged-in CA
+        client_id = request.session.get('ack_client_id') or request.GET.get('client_id')
+        user = None
         if client_id:
-            user = User.objects.get(id=client_id)
-        else:
-            user = request.user
+            try:
+                user = User.objects.get(id=client_id)
+                # Mark Income Tax as filed for this client if not already
+                due_date = date(2025, 7, 30)
+                FiledReturn.objects.get_or_create(
+                    client=user,
+                    return_type='IT',
+                    due_date=due_date,
+                    defaults={'filed_by': request.user}
+                )
+            except User.DoesNotExist:
+                user = None
         context = {
             'assessment_year': '2025-26',
-            'name': user.get_full_name() or user.username,
-            'pan': getattr(user, 'pan_number', ''),
-            'flat_no': '',
+            'name': user.get_full_name() or user.username if user else '',
+            'pan': getattr(user, 'pan_number', '') if user else '',
+            'flat_no': getattr(user, 'address', '') if user else '',
             'building': '',
             'street': '',
-            'area': '',
+            'area': getattr(user, 'bank_account', '') if user else '',
             'city': '',
             'state': '',
             'pincode': '',
@@ -222,8 +232,4 @@ class AcknowledgmentView(LoginRequiredMixin, TemplateView):
             'refund': '...',
             'exempt_income': '...',
         }
-        if hasattr(user, 'address') and user.address:
-            context['flat_no'] = user.address
-        if hasattr(user, 'bank_account') and user.bank_account:
-            context['area'] = user.bank_account
         return render(request, self.template_name, context)

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDS Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Add custom fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-12 px-4">
+
+    <div class="max-w-3xl mx-auto mt-10">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Vendor-wise TDS Summary</h2>
+        <div class="overflow-x-auto bg-white rounded-lg shadow p-6">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Vendor</th>
+                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total Amount</th>
+                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total TDS</th>
+                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total Net Payable</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    {% for row in summary %}
+                    <tr>
+                        <td class="px-4 py-2">{{ row.vendor__name }}</td>
+                        <td class="px-4 py-2">₹{{ row.total_amount }}</td>
+                        <td class="px-4 py-2">₹{{ row.total_tds }}</td>
+                        <td class="px-4 py-2">₹{{ row.total_net }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-2 text-center text-gray-500">No records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="mt-6">
+                <a href="{% url 'download_vendor_summary' %}" class="inline-block px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition duration-150 ease-in-out">
+                    Download CSV
+                </a>
+                <a href="{% url 'calculator' %}" class="inline-block ml-4 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition duration-150 ease-in-out">
+                    Back to Calculator
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

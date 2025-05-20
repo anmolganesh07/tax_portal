@@ -1,0 +1,42 @@
+<!-- templates/tds_app/due_dates.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDS Due Dates</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 py-8">
+
+<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow-md">
+    <h1 class="text-2xl font-bold mb-4">TDS Due Dates (FY 2024-25)</h1>
+
+    <table class="w-full text-left border-collapse">
+        <thead>
+            <tr>
+                <th class="border-b p-2">Month</th>
+                <th class="border-b p-2">Due Date</th>
+                <th class="border-b p-2">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for due in due_dates %}
+            <tr class="{% if due.status == 'Upcoming' %}bg-green-50{% else %}bg-gray-50{% endif %}">
+                <td class="p-2">{{ due.month }}</td>
+                <td class="p-2">{{ due.date }}</td>
+                <td class="p-2 text-sm font-medium text-gray-600">
+                    {% if due.status == 'Upcoming' %}
+                        <span class="text-green-600">Upcoming</span>
+                    {% else %}
+                        <span class="text-gray-500">Past</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

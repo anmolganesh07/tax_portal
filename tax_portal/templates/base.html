@@ -1,20 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}CA Tax Portal{% endblock %}</title>
+  <title>{% block title %}TAXBee{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="/static/favicon.ico">
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-white min-h-screen flex flex-col text-gray-800">
   <header class="bg-blue-900 text-white shadow-lg">
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
-      <div class="flex items-center space-x-3">
-        <img src="/static/logo_ca.png" alt="CA Portal Logo" class="h-10 w-10 rounded-full border-2 border-gold-400 shadow-md" onerror="this.style.display='none'">
-        <nav class="space-x-6 hidden md:block">
-          <a href="/" class="hover:text-gold-400 transition">CA Portal Logo</a>
-        </nav>
-      </div>
+      <a href="/">
+        <img src="{% static 'tax_portal/final.png' %}" alt="TaxBee Logo" class="h-12 w-auto object-contain" />
+      </a>
+      <a href="/tds_app/" class="text-white font-semibold hover:text-gold-400 transition">TDS App</a>
     </div>
   </header>
   <main class="flex-1">
@@ -22,8 +21,8 @@
   </main>
   <footer class="bg-blue-900 text-white py-4 mt-8 shadow-inner">
     <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-      <span>&copy; {{ now|default:2025 }} CA Tax Portal. All rights reserved.</span>
-      <span class="text-sm">For support, contact <a href="mailto:support@cataxportal.com" class="underline text-gold-300">support@cataxportal.com</a></span>
+      <span>&copy; {{ now|default:2025 }} TAXBee. All rights reserved.</span>
+      <span class="text-sm">For support, contact <a href="mailto:support@taxbee.com" class="underline text-gold-300">support@cataxportal.com</a></span>
     </div>
   </footer>
 </body>
