@@ -31,8 +31,10 @@
                   <li class="mb-2">
                     <span class="font-semibold {% if item.color == 'green' %}text-green-600{% elif item.color == 'yellow' %}text-yellow-500{% else %}text-red-600{% endif %}">
                       {{ item.label }} — Due on {{ item.due_date|date:'d M, Y' }}
-                      {% if item.status == 'filed' %}
-                        <a href="{% url 'client_acknowledgment' %}?filed_return_id={{ item.filed_return_id }}" class="underline text-green-700 font-bold">(Filed)</a>
+                      {% if item.status == 'filed' and item.label == 'Income Tax' and item.filed_return_id %}
+                        <a href="{% url 'ca_acknowledgment' %}?filed_return_id={{ item.filed_return_id }}&client_id={{ client.id }}" class="underline text-green-700 font-bold">(Filed)</a>
+                      {% elif item.status == 'filed' %}
+                        <span class="text-green-700 font-bold">(Filed)</span>
                       {% elif item.status == 'overdue' %}
                         (Overdue)
                       {% else %}
