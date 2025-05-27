@@ -6,23 +6,33 @@
   <title>{% block title %}TAXBee{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="/static/favicon.ico">
+  <style>
+    body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; }
+    .gold-gradient {
+      background: linear-gradient(90deg, #FFD700 0%, #FFB300 100%);
+    }
+    .shadow-gold {
+      box-shadow: 0 4px 20px 0 rgba(255, 215, 0, 0.08);
+    }
+    .footer-link:hover { color: #FFD700; }
+  </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-white min-h-screen flex flex-col text-gray-800">
-  <header class="bg-blue-900 text-white shadow-lg">
+  <header class="bg-blue-50 shadow-lg border-b border-blue-100">
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
-      <a href="/">
-        <img src="{% static 'tax_portal/final.png' %}" alt="TaxBee Logo" class="h-12 w-auto object-contain" />
+      <a href="/" class="flex items-center space-x-2">
+        <img src="{% static 'tax_portal/final_logo.png' %}" alt="TaxBee Logo" class="h-10 w-auto object-contain drop-shadow-lg" />
       </a>
-      <a href="/tds_app/" class="text-white font-semibold hover:text-gold-400 transition">TDS Calculator</a>
+      {% block header_extra %}{% endblock %}
     </div>
   </header>
   <main class="flex-1">
     {% block content %}{% endblock %}
   </main>
-  <footer class="bg-blue-900 text-white py-4 mt-8 shadow-inner">
+  <footer class="bg-blue-50 text-blue-900 py-6 mt-8 shadow-inner border-t border-blue-100">
     <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-      <span>&copy; {{ now|default:2025 }} TAXBee. All rights reserved.</span>
-      <span class="text-sm">For support, contact <a href="mailto:support@taxbee.com" class="underline text-gold-300">support@taxbee.com</a></span>
+      <span class="font-semibold tracking-wide">&copy; {{ now|default:2025 }} TAXBee. All rights reserved.</span>
+      <span class="text-sm">For support, contact <a href="mailto:support@taxbee.com" class="underline footer-link">support@taxbee.com</a></span>
     </div>
   </footer>
 </body>

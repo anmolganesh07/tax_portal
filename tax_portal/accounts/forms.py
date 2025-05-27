@@ -45,7 +45,7 @@ class ItrUserLoginForm(forms.Form):
     user_id = forms.CharField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput)
     FIN_YEAR_CHOICES = [
-        (f"{y}-{y+1}", f"{y}-{y+1}") for y in range(2019, 2026)
+        (f"{y}-{y+1}", f"{y}-{y+1}") for y in range(2024, 2026)
     ]
     financial_year = forms.ChoiceField(choices=FIN_YEAR_CHOICES, label="Financial Year")
 
